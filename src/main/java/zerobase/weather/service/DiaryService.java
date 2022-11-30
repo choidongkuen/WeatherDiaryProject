@@ -16,6 +16,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -30,7 +31,7 @@ public class DiaryService {
     private String apiKey = "813269163e31fcdb7e20a4cb0d5fd313";
     private final DiaryRepository diaryRepository;
 
-    public void createDiardy(LocalDate date, String text) {
+    public void createDiary(LocalDate date, String text) {
 
         // 1. openweathermap 데이터 가져오기
         String weatherData = getWeatherString();
@@ -111,4 +112,19 @@ public class DiaryService {
 
         return resultMap;
     }
+
+    // 해당 날짜에 해당하는 일기 가져오는 메소드
+    public List<Diary> readDiary(LocalDate date) {
+
+        return diaryRepository.findAllByDate(date);
+
+    }
+
+    public List<Diary> readDiaries(LocalDate startDate, LocalDate endDate) {
+
+        return diaryRepository.findAllByDateBetween(startDate,endDate);
+
+    }
 }
+
+

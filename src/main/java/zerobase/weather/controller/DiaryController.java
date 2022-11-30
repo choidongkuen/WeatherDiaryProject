@@ -18,15 +18,15 @@ public class DiaryController {
 
     // create
     @PostMapping("/create/diary")
-    void createDiary(@RequestParam @DateTimeFormat(iso= DateTimeFormat.ISO.DATE) LocalDate date
-    , @RequestBody String text){
+    void createDiary(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date
+            , @RequestBody String text) {
 
-        diaryService.createDiary(date,text);
+        diaryService.createDiary(date, text);
     }
 
     // read(특정 날짜)
     @GetMapping("/read/diary")
-    List<Diary> readDiary(@RequestParam @DateTimeFormat(iso= DateTimeFormat.ISO.DATE) LocalDate date){
+    List<Diary> readDiary(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
 
         // 해당 날짜의 일기 리턴
         return diaryService.readDiary(date);
@@ -35,12 +35,29 @@ public class DiaryController {
 
     // read(날짜 범위: 두개의 날짜 입력)
     @GetMapping("/read/diaries")
-    List<Diary> readDiaries(@RequestParam @DateTimeFormat(iso= DateTimeFormat.ISO.DATE) LocalDate startDate,
-                    @RequestParam @DateTimeFormat(iso= DateTimeFormat.ISO.DATE) LocalDate endDate){
+    List<Diary> readDiaries(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+                            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
 
 
         // startDate ~ endDate 모든 일기 리턴
-        return diaryService.readDiaries(startDate,endDate);
+        return diaryService.readDiaries(startDate, endDate);
+
+    }
+
+    // update
+    @PutMapping("/update/diary")
+    void updateDiary(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date
+            , @RequestBody String text) {
+
+        diaryService.updateDiary(date, text);
+
+    }
+
+    // delete
+    @DeleteMapping("/delete/diary")
+    void deleteDiary(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date){
+
+        diaryService.deleteDiary(date);
 
     }
 }

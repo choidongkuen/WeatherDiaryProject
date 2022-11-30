@@ -18,6 +18,7 @@ import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -120,9 +121,27 @@ public class DiaryService {
 
     }
 
+    // 날짜의 범위에 해당하는 일기 가져오는 메소드
     public List<Diary> readDiaries(LocalDate startDate, LocalDate endDate) {
 
         return diaryRepository.findAllByDateBetween(startDate,endDate);
+
+    }
+
+    // 해당 날짜에 해당하는 일기 수정하는 메소드
+    public void updateDiary(LocalDate date, String text) {
+
+        Diary nowDiary = diaryRepository.getFirstByDate(date);
+        nowDiary.setText(text);
+
+        diaryRepository.save(nowDiary);
+
+    }
+
+    // 해당 날짜에 해당하는 일기 삭제하는 메소드
+    public void deleteDiary(LocalDate date) {
+
+        diaryRepository.deleteAllByDate(date);
 
     }
 }

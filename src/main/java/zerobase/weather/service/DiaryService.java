@@ -5,12 +5,16 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
+import zerobase.weather.WeatherApplication;
 import zerobase.weather.entity.DateWeather;
 import zerobase.weather.entity.Diary;
+import zerobase.weather.error.InvalidDate;
 import zerobase.weather.repository.DateWeatherRepository;
 import zerobase.weather.repository.DiaryRepository;
 
@@ -27,6 +31,7 @@ import java.util.Map;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
+
 // Transactional -> DiaryService(DB 작업이 집중된 영역)
 public class DiaryService {
 
@@ -38,9 +43,11 @@ public class DiaryService {
     private final DiaryRepository diaryRepository;
     private final DateWeatherRepository dateWeatherRepository;
 
+    private static final Logger logger = LoggerFactory.getLogger(WeatherApplication.class);
+
     @Transactional(isolation = Isolation.SERIALIZABLE)
     public void createDiary(LocalDate date, String text) {
-
+        logger.info("started to create diary");
 
         // 1. openweathermap 데이터 가져오기
         // String weatherData = getWeatherString();
@@ -57,8 +64,11 @@ public class DiaryService {
         nowDiary.setDateWeather(dateWeather);
         nowDiary.setText(text);
         diaryRepository.save(nowDiary);
+
+        logger.info("end to create diary");
     }
 
+    // date를 통해 DateWeather 객체 구하기
     private DateWeather getDateWeather(LocalDate date){
 
         List<DateWeather> dateWeatherListFromDB = dateWeatherRepository.findAllByDate(date);
@@ -150,6 +160,12 @@ public class DiaryService {
     @Transactional(readOnly = true)
     public List<Diary> readDiary(LocalDate date) {
 
+
+//        정의되지 않는 낧짜 형식 예외
+//        if(date.isAfter(LocalDate.ofYearDay(3050,1))){
+//            throw new InvalidDate();
+//        }
+
         return diaryRepository.findAllByDate(date);
 
     }
@@ -179,13 +195,15 @@ public class DiaryService {
     }
 
     // 매일 새벽 1시에 전날 날씨 저장하는 메소드
+    // 따로 컨트롤러 필요 x -> 시간 되면 해당 메소드 자동 호출
     @Transactional()
-    @Scheduled(cron = "0/5 * * * * *")
+    @Scheduled(cron = "0 0 1 * * *")
     public void saveWeatherDate() {
 
         dateWeatherRepository.save(getWeatherFromApi());
-
     }
+
+    // ExceptionHandler 는 하나의 Controller 파일에 모든 예외를 잡아서 처리해준다.(프로그램 전체 x)
 
 
 }

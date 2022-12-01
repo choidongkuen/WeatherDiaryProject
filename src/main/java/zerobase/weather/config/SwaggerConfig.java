@@ -13,12 +13,13 @@ public class SwaggerConfig{
 
     @Bean
     public OpenAPI apiInfo(){
-        return new OpenAPI().info(new Info().title("Swagger Test"));
+        return new OpenAPI().info(new Info().title("날씨 일기 프로젝트 :)"));
     }
 
     @Bean
     public GroupedOpenApi httpApi(){
         return GroupedOpenApi.builder()
+                .displayName("입력해주세요")
                 .group("http")
                 .pathsToMatch("/**")
                 .build();

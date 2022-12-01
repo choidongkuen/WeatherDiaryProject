@@ -40,4 +40,13 @@ public class Diary {
     @NonNull
     private LocalDate date; // 날짜가 쓰여지는 날짜
 
+
+    public void setDateWeather(DateWeather dateWeather) {
+
+        this.weather = dateWeather.getWeather();
+        this.icon = dateWeather.getIcon();
+        this.date = dateWeather.getDate();
+        this.temperature = dateWeather.getTemperature();
+
+    }
 }

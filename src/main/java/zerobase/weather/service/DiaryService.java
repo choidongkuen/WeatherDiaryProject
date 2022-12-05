@@ -14,7 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 import zerobase.weather.WeatherApplication;
 import zerobase.weather.entity.DateWeather;
 import zerobase.weather.entity.Diary;
-import zerobase.weather.error.InvalidDate;
 import zerobase.weather.repository.DateWeatherRepository;
 import zerobase.weather.repository.DiaryRepository;
 
